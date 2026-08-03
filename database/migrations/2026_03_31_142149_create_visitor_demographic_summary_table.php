@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('visitor_demographic_summary', function (Blueprint $table) {
+            $table->id();
+            $table->string('state', 128);
+            $table->string('country', 128);
+            $table->integer('state_count');
+            $table->integer('country_count');
+            $table->unsignedBigInteger('visitor_summary_id');
+            $table->timestamps();
+
+            $table->index('visitor_summary_id');
+            $table->foreign('visitor_summary_id')->references('id')->on('visitors_summary');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('visitor_demographic_summary');
+    }
+};

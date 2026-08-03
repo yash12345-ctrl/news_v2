@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Models\Article;
+use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use Kreait\Laravel\Firebase\Facades\Firebase;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+
+class ArticlePublishedNotification implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * @var int
+     */
+    public $tries = 3;
+
+    private $article;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(Article $article)
+    {
+        $this->article = $article;
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        // Return an instance of the Auth component for the default Firebase project
+        $defaultAuth = Firebase::auth();
+        $messaging = Firebase::messaging();
+
+        $title = $this->article->title;
+        $body = $this->article->content_short_ur;
+        $image_url = $this->article->image_url;
+
+        $notification = Notification::fromArray([
+            'title' => $title,
+            'body'  => $body,
+            'image' => $image_url,
+        ]);
+
+        $topic = env('FIREBASE_FCM_TOPIC');
+        $notification = Notification::create($title, $body);
+        $message = CloudMessage::withTarget('topic', $topic)
+                    ->withNotification($notification);
+
+        try {
+            $ret = $messaging->send($message);
+        } catch (\Exception $e) {
+            Log::error('FCM: '. $e->getMessage());
+        }
+
+    }
+}
