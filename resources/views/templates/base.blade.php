@@ -11,7 +11,7 @@
 <meta name="facebook-domain-verification" content="2cv2b4thia75eq6jcy5xs4u89wzm3m" />
 
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
-<link rel="stylesheet" href="/assets/css/styles.css?v=1.2.0">
+<link rel="stylesheet" href="/assets/css/styles.css?v=1.2.2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@400;600;700;900&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet">

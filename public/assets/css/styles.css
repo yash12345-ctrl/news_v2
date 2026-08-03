@@ -3075,8 +3075,7 @@ padding: 200px;
     100% { box-shadow: 0 0 8px rgba(227, 30, 36, 0.5); }
 }
 
-a[href="/trending-videos"]:not(.floating-btn),
-.premium-nav-item a.active {
+a[href="/trending-videos"]:not(.floating-btn) {
     background: linear-gradient(135deg, #e31e24 0%, #c41318 100%) !important;
     color: #ffffff !important;
     padding: 8px 24px !important;
@@ -3097,8 +3096,7 @@ a[href="/trending-videos"]:not(.floating-btn),
 }
 
 /* Remove the old underline completely */
-a[href="/trending-videos"]:not(.floating-btn)::after,
-.premium-nav-item a.active::after {
+a[href="/trending-videos"]:not(.floating-btn)::after {
     display: none !important;
 }
 
