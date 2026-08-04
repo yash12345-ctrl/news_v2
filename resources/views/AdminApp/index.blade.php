@@ -9,8 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <script src="/assets/js/scripts.js?v=1.1.0"></script>
     
-    <script type="module" crossorigin src="/assets/admin-app.js"></script>
-    <link rel="stylesheet" href="/assets/admin-app.css">
+    <script type="module" crossorigin src="/assets/admin-app.js?v={{ time() }}"></script>
+    <link rel="stylesheet" href="/assets/admin-app.css?v={{ time() }}">
   </head>
   <body>
     <div id="root"></div>
