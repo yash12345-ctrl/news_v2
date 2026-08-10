@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -21,7 +22,8 @@ class UserController extends Controller
             throw new HttpException(403, 'You are not allowed to see users list.');
         }
 
-        $users = User::query();
+        // Hide unverified (status = 0) users by default
+        $users = User::query()->where('status', '!=', 0);
 
         if (request("from_date")) {
             $users->where("created_at", ">=", date("Y-m-d", strtotime(request("from_date"))));
@@ -33,6 +35,12 @@ class UserController extends Controller
 
         if (request("status")) {
             $users->where("status", "=", (int) request("status"));
+        }
+
+        if (request("source") === 'app') {
+            $users->whereNull('email');
+        } elseif (request("source") === 'web') {
+            $users->whereNotNull('email');
         }
 
         if ($v = request("search")) {
@@ -74,8 +82,8 @@ class UserController extends Controller
             'first_name'    => 'required|max:32',
             'last_name'     => 'required|max:32',
             'gender'        => 'required|integer|in:1,2',
-            'phone'         => 'required|numeric|digits:10|unique:users,phone,'.$id,
-            'email'         => 'required|email|max:64|unique:users,email,'.$id,
+            'phone'         => ['required', 'numeric', 'digits:10', Rule::unique('users')->ignore($id)->whereNull('deleted_at')],
+            'email'         => ['required', 'email', 'max:64', Rule::unique('users')->ignore($id)->whereNull('deleted_at')],
         ]);
 
         $users = User::find($id);
@@ -159,5 +167,33 @@ class UserController extends Controller
 
         $user->update($validated);
         return new UserResource($user);
+    }
+
+    public function destroy(int $id)
+    {
+        $auth_user = auth()->user();
+
+        if (!$auth_user->isSuperAdmin()) {
+            throw new HttpException(403, "You are not allowed to delete users.");
+        }
+
+        $user = User::find($id);
+        if (is_null($user)) {
+            throw new NotFoundResourceException("The user with ID '$id' does not exist.");
+        }
+
+        if ($user->id === $auth_user->id) {
+            throw new HttpException(403, "You cannot delete yourself.");
+        }
+
+        // Free up the email and phone before soft-deleting so the same email/phone can be registered again.
+        $user->email = $user->email . '.deleted.' . $user->id . '.' . time();
+        if ($user->phone) {
+            $user->phone = $user->phone . '.del' . $user->id;
+        }
+        $user->save();
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully.']);
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Validation\Rule;
 
 
 class AuthController extends Controller
@@ -38,6 +39,15 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+        
+        if ($user->status === 0) {
+            // Logout the user since attempt() logged them in
+            Auth::guard('user-api')->logout();
+            throw ValidationException::withMessages([
+                "email" => ["Please verify your email using the OTP sent to you before logging in."]
+            ]);
+        }
+
         $token = $user->createToken('user-token');
 
         return [
@@ -79,6 +89,11 @@ class AuthController extends Controller
             ]);
         }
 
+        if ($user->status === 0) {
+            $user->status = 1;
+            $user->save();
+        }
+
         $token = $user->createToken('user-token');
         $otp->delete();
 
@@ -92,22 +107,38 @@ class AuthController extends Controller
 
     public function register(Request $request): JsonResource
     {
-        $validated = $request->validate([
+        $rules = [
             'first_name'    => 'required|max:32',
             'last_name'     => 'nullable|max:32',
             'gender'        => 'nullable|integer|in:1,2',
             'dob'           => 'nullable|date',
             'age'           => 'nullable|integer',
-            'phone'         => 'required|numeric|digits:10|unique:users',
-            'email'         => 'required|email|unique:users|max:64',
-            'password'      => 'nullable|min:8|max:30',
+            'phone'         => ['nullable', 'numeric', 'digits:10', Rule::unique('users')->whereNull('deleted_at')],
+            'email'         => ['required', 'email', 'max:64', Rule::unique('users')->whereNull('deleted_at')],
+            'password'      => 'required|min:8|max:30',
             'address_id'    => 'nullable|integer|exists:addresses,id',
-        ]);
+        ];
+
+        $existingUser = User::where('email', $request->email)->whereNull('deleted_at')->first();
+        if ($existingUser && $existingUser->status === 0) {
+            $rules['email'] = ['required', 'email', 'max:64', Rule::unique('users')->ignore($existingUser->id)->whereNull('deleted_at')];
+            if ($request->phone && $existingUser->phone === $request->phone) {
+                 $rules['phone'] = ['nullable', 'numeric', 'digits:10', Rule::unique('users')->ignore($existingUser->id)->whereNull('deleted_at')];
+            }
+        }
+
+        $validated = $request->validate($rules);
 
         $validated['password'] = Hash::make($validated['password'] ?? env('DEFAULT_PASSWORD'));
         $validated['photo'] = env('DEFAULT_IMG');
+        $validated['status'] = 0; // 0 = unverified
 
-        $user = User::create($validated);
+        if ($existingUser && $existingUser->status === 0) {
+            $existingUser->update($validated);
+            $user = $existingUser;
+        } else {
+            $user = User::create($validated);
+        }
 
         // Send email verification code
         $otp = random_int(100000, 999999);
@@ -123,6 +154,31 @@ class AuthController extends Controller
         ]);
 
         return new UserResource($user);
+    }
+
+    public function registerPhone(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name'    => 'required|max:32',
+            'phone'         => ['required', 'numeric', 'digits:10', Rule::unique('users')->whereNull('deleted_at')],
+            'password'      => 'required|min:8|max:30',
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+        $validated['photo'] = env('DEFAULT_IMG');
+        
+        // Ensure email is null since it's not provided but unique in DB
+        $validated['email'] = null;
+
+        $user = User::create($validated);
+        $token = $user->createToken('user-token');
+
+        return [
+            "user" => new UserResource($user),
+            "token" => [
+                "token" => $token->plainTextToken,
+            ],
+        ];
     }
 
     public function logout(Request $request)

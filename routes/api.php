@@ -96,6 +96,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/users', [UserController::class, 'index']);
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::post('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::post('/users/{id}/upload', [UserController::class, 'upload']);
     Route::delete('/my-profile/delete', [MyProfileController::class, 'delete']);
     Route::patch('/users/{user}/reset-password', [UserController::class, 'resetPassword']);
@@ -168,8 +169,10 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
 Route::get('/articles', [ArticleController::class, 'index']);
+Route::get('/articles/my-feed', [ArticleController::class, 'myFeed']);
 Route::get('/articles/trending', [ArticleController::class, 'trendingArticles']);
 Route::get('/articles/popular', [ArticleController::class, 'popularArticles']);
+Route::post('/articles/{id}/track-view', [ArticleController::class, 'trackInteraction']);
 Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/articles/{id}/comments', [ArticleController::class, 'getCommentByArticleId']);
 Route::get('/articles/{id}/related', [ArticleController::class, 'relatedArticles']);
@@ -189,6 +192,7 @@ Route::get('/editions', [EditionController::class, 'index']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'authenticate']);
 Route::post('/auth/otp-login', [AuthController::class, 'authenticateViaEmailOTP']);
+Route::post('/register-phone', [AuthController::class, 'registerPhone']);
 
 // An API for collecting visitor analytics
 // No controller needed for this

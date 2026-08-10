@@ -9,6 +9,7 @@ use App\Models\Article;
 use App\Models\Category;
 use App\TTS\ElevenlabsTTS;
 use App\Models\ArticleVote;
+use App\Models\ArticleInteraction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Rules\ValidYouTubeUrl;
@@ -573,5 +574,69 @@ class ArticleController extends Controller
         }
 
         return response()->json(['error' => 'Translation failed'], 500);
+    }
+
+    public function trackInteraction(Request $request, $id)
+    {
+        $uuid = $request->header('X-Device-ID') ?: $request->input('uuid');
+        if (!$uuid) {
+            return response()->json(['error' => 'Device ID is required'], 400);
+        }
+
+        $article = Article::find($id);
+        if (!$article) {
+            return response()->json(['error' => 'Article not found'], 404);
+        }
+
+        $userId = Auth::check() ? Auth::id() : null;
+
+        // Prevent spam tracking
+        $recent = ArticleInteraction::where('uuid', $uuid)
+            ->where('article_id', $id)
+            ->where('created_at', '>=', now()->subHours(1))
+            ->first();
+
+        if (!$recent) {
+            ArticleInteraction::create([
+                'uuid' => $uuid,
+                'user_id' => $userId,
+                'article_id' => $id,
+                'category_id' => $article->category_id,
+            ]);
+        }
+
+        return response()->json(['message' => 'Interaction tracked successfully']);
+    }
+
+    public function myFeed(Request $request): JsonResource
+    {
+        $uuid = $request->header('X-Device-ID') ?: $request->input('uuid');
+        
+        $lang = Article::BOTH;
+        if (lang_urdu()) $lang = Article::URDU;
+        if (lang_english()) $lang = Article::HINDUSTANI;
+
+        $query = Article::query()->where('status', Article::PUBLISHED)
+            ->whereIn('visible_in', [$lang, Article::BOTH]);
+
+        if ($uuid) {
+            // Find top 3 categories the user interacted with
+            $topCategoryIds = ArticleInteraction::where('uuid', $uuid)
+                ->selectRaw('category_id, count(*) as count')
+                ->groupBy('category_id')
+                ->orderByDesc('count')
+                ->limit(3)
+                ->pluck('category_id')
+                ->toArray();
+
+            if (!empty($topCategoryIds)) {
+                $ids = implode(',', $topCategoryIds);
+                $query->orderByRaw("CASE WHEN category_id IN ({$ids}) THEN 1 ELSE 2 END ASC");
+            }
+        }
+
+        $articles = $query->latest('published_at')->paginate(20);
+
+        return ArticleResource::collection($articles);
     }
 }
