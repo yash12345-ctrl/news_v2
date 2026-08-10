@@ -189,7 +189,7 @@ class UserController extends Controller
         // Free up the email and phone before soft-deleting so the same email/phone can be registered again.
         $user->email = $user->email . '.deleted.' . $user->id . '.' . time();
         if ($user->phone) {
-            $user->phone = $user->phone . '.del' . $user->id;
+            $user->phone = null;
         }
         $user->save();
         $user->delete();
