@@ -192,6 +192,9 @@ Route::get('/editions', [EditionController::class, 'index']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'authenticate']);
 Route::post('/auth/otp-login', [AuthController::class, 'authenticateViaEmailOTP']);
+Route::post('/auth/forgot-password/send-otp', [AuthController::class, 'forgotPasswordSendOtp']);
+Route::post('/auth/forgot-password/verify-otp', [AuthController::class, 'forgotPasswordVerifyOtp']);
+Route::post('/auth/forgot-password/reset', [AuthController::class, 'forgotPasswordReset']);
 Route::post('/register-phone', [AuthController::class, 'registerPhone']);
 
 // An API for collecting visitor analytics

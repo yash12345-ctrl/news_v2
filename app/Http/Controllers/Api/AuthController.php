@@ -187,4 +187,108 @@ class AuthController extends Controller
         Auth::guard('user-api')->logout();
         $user->tokens()->delete();
     }
+    public function forgotPasswordSendOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user->status === 0) {
+            throw ValidationException::withMessages([
+                'email' => ['Please verify your email first.']
+            ]);
+        }
+
+        // Delete any existing OTPs for this user
+        AuthOtp::where('username', $user->email)->delete();
+
+        // Send email verification code
+        $otp = random_int(100000, 999999);
+        Mail::to($user)->send(new \App\Mail\ForgotPasswordOtp($user, $otp));
+
+        // Store OTP info in table
+        AuthOtp::create([
+            'username' => $user->email,
+            'otp' => $otp,
+            'expires_at' => now()->addMinutes((int) env("OTP_EXPIRE_MINUTES", 15))->toDateTimeString(),
+            'created_at' => now()->toDateTimeString(),
+        ]);
+
+        return response()->json([
+            'message' => 'OTP sent successfully to your email.'
+        ]);
+    }
+
+    public function forgotPasswordVerifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required|size:6',
+        ]);
+
+        $otpRecord = AuthOtp::findByUsernameAndOtp($request->email, $request->otp);
+        if (is_null($otpRecord)) {
+            throw ValidationException::withMessages([
+                "otp" => ["Invalid OTP."]
+            ]);
+        }
+
+        // Has OTP expired?
+        $now = new \DateTime();
+        $expiry_time = new \DateTime($otpRecord->expires_at);
+        if ($now > $expiry_time) {
+            $otpRecord->delete();
+            throw ValidationException::withMessages([
+                "otp" => ["OTP expired."]
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'OTP verified successfully.'
+        ]);
+    }
+
+    public function forgotPasswordReset(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required|size:6',
+            'password' => 'required|min:8|max:30|confirmed'
+        ]);
+
+        $otpRecord = AuthOtp::findByUsernameAndOtp($request->email, $request->otp);
+        if (is_null($otpRecord)) {
+            throw ValidationException::withMessages([
+                "otp" => ["Invalid OTP."]
+            ]);
+        }
+
+        // Has OTP expired?
+        $now = new \DateTime();
+        $expiry_time = new \DateTime($otpRecord->expires_at);
+        if ($now > $expiry_time) {
+            $otpRecord->delete();
+            throw ValidationException::withMessages([
+                "otp" => ["OTP expired."]
+            ]);
+        }
+
+        $user = User::where('email', $otpRecord->username)->first();
+        if (is_null($user)) {
+            throw ValidationException::withMessages([
+                "otp" => ["Invalid OTP."]
+            ]);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        $otpRecord->delete();
+
+        return response()->json([
+            'message' => 'Password reset successfully. You can now log in.'
+        ]);
+    }
 }
