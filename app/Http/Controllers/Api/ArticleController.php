@@ -238,7 +238,7 @@ class ArticleController extends Controller
         $article->update($validated);
         
         if (isset($validated['status']) && $validated['status'] == Article::PUBLISHED && $old_status != Article::PUBLISHED) {
-            ArticlePublishedNotification::dispatch($article);
+            ArticlePublishedNotification::dispatchSync($article);
         }
 
         return new ArticleResource($article);
@@ -275,7 +275,7 @@ class ArticleController extends Controller
         $article->update($validated);
 
         if ($validated['status'] == Article::PUBLISHED) {
-            ArticlePublishedNotification::dispatch($article);
+            ArticlePublishedNotification::dispatchSync($article);
         }
         return new ArticleResource($article);
     }
