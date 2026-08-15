@@ -42,9 +42,9 @@ class ArticlePublishedNotification implements ShouldQueue
         $defaultAuth = Firebase::auth();
         $messaging = Firebase::messaging();
 
-        $title = $this->article->title;
-        $body = $this->article->content_short_ur;
-        $image_url = $this->article->image_url;
+        $title = $this->article->title ?? $this->article->title_ur;
+        $body = $this->article->content_short_ur ?? '';
+        $image_url = $this->article->image_url ?? '';
 
         $topic = env('FIREBASE_FCM_TOPIC');
         $message = CloudMessage::withTarget('topic', $topic)
@@ -54,7 +54,17 @@ class ArticlePublishedNotification implements ShouldQueue
                         'image' => $image_url,
                     ])
                     ->withAndroidConfig(\Kreait\Firebase\Messaging\AndroidConfig::fromArray([
-                        // Data-only message configuration
+                        'priority' => 'high',
+                    ]))
+                    ->withApnsConfig(\Kreait\Firebase\Messaging\ApnsConfig::fromArray([
+                        'headers' => [
+                            'apns-priority' => '10',
+                        ],
+                        'payload' => [
+                            'aps' => [
+                                'content-available' => 1,
+                            ],
+                        ],
                     ]));
 
         try {

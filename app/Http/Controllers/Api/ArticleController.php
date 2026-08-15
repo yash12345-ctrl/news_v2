@@ -261,10 +261,13 @@ class ArticleController extends Controller
 
         if ($validated['status'] == Article::PUBLISHED) {
             $validated['published_at'] = date('Y-m-d H:i:s');
-            ArticlePublishedNotification::dispatch($article);
         }
 
         $article->update($validated);
+
+        if ($validated['status'] == Article::PUBLISHED) {
+            ArticlePublishedNotification::dispatch($article);
+        }
         return new ArticleResource($article);
     }
 
