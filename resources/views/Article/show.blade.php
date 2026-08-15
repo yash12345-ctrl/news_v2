@@ -502,7 +502,7 @@
                             <div class="article-section-details-vote">
                                 <div class="article-section-details-vote-text text-left">
                                     <h2 class="article-section-details-vote-text-title">Please vote this article</h2>
-                                    <span class="article-section-details-vote-text-subtitle">{{ $count_vote }} Responses</span>
+                                    <span class="article-section-details-vote-text-subtitle" v-cloak>@{{ currentVoteCount }} Responses</span>
                                     @if(session()->has('vote_message'))
                                         <div class="alert alert-success">
                                             {{ session()->get('vote_message') }}
@@ -801,6 +801,7 @@ const app = new Vue({
         originalTitle: "",
         originalContent: "",
         voteMessage: "",
+        currentVoteCount: {{ $count_vote }},
     },
 
     methods: {
@@ -820,6 +821,7 @@ const app = new Vue({
                 })
                 .then(response => {
                     this.voteMessage = "Thank you! Your vote has been recorded.";
+                    this.currentVoteCount++;
                 })
                 .catch(error => {
                     console.error("Error submitting vote:", error);
