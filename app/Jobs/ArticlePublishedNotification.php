@@ -46,20 +46,15 @@ class ArticlePublishedNotification implements ShouldQueue
         $body = $this->article->content_short_ur;
         $image_url = $this->article->image_url;
 
-        $notification = Notification::fromArray([
-            'title' => $title,
-            'body'  => $body,
-            'image' => $image_url,
-        ]);
-
         $topic = env('FIREBASE_FCM_TOPIC');
-        $notification = Notification::create($title, $body);
         $message = CloudMessage::withTarget('topic', $topic)
-                    ->withNotification($notification)
+                    ->withData([
+                        'title' => $title,
+                        'body' => $body,
+                        'image' => $image_url,
+                    ])
                     ->withAndroidConfig(\Kreait\Firebase\Messaging\AndroidConfig::fromArray([
-                        'notification' => [
-                            'channel_id' => 'article_event_channel',
-                        ],
+                        // Data-only message configuration
                     ]));
 
         try {

@@ -36,19 +36,14 @@ class SendUserNotification implements ShouldQueue
         $title = $this->data['title'];
         $message = $this->data['message'];
 
-        $notification = Notification::fromArray([
-            'title' => $title,
-            'message'  => $message,
-        ]);
-
         $topic = env('FIREBASE_FCM_TOPIC');
-        $notification = Notification::create($title, $message);
         $message = CloudMessage::withTarget('topic', $topic)
-                    ->withNotification($notification)
+                    ->withData([
+                        'title' => $title,
+                        'message' => $message,
+                    ])
                     ->withAndroidConfig(\Kreait\Firebase\Messaging\AndroidConfig::fromArray([
-                        'notification' => [
-                            'channel_id' => 'article_event_channel',
-                        ],
+                        // Data-only message configuration
                     ]));
 
         try {
