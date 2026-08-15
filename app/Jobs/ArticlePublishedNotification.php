@@ -48,6 +48,7 @@ class ArticlePublishedNotification implements ShouldQueue
 
         $topic = env('FIREBASE_FCM_TOPIC');
         $message = CloudMessage::withTarget('topic', $topic)
+                    ->withNotification(\Kreait\Firebase\Messaging\Notification::create($title, $body, $image_url))
                     ->withData([
                         'title' => $title,
                         'body' => $body,
