@@ -203,7 +203,7 @@ class ArticleController extends Controller
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type' => 'application/json',
             ])->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama-3.3-70b-versatile',
+                'model' => 'llama-3.1-8b-instant',
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a professional translator that strictly returns valid JSON and translates Urdu to pure, formal English.'],
                     ['role' => 'user', 'content' => $prompt]
