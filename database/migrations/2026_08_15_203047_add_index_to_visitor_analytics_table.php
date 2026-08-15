@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('visitor_analytics', function (Blueprint $table) {
-            $table->index('last_visited_at');
-        });
+        try {
+            Schema::table('visitor_analytics', function (Blueprint $table) {
+                $table->index('last_visited_at');
+            });
+        } catch (\Exception $e) {
+            // Ignore if index already exists
+        }
     }
 
     /**

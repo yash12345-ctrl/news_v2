@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('articles', function (Blueprint $table) {
-            $table->index('created_at');
-        });
+        try {
+            Schema::table('articles', function (Blueprint $table) {
+                $table->index('created_at');
+            });
+        } catch (\Exception $e) {
+            // Ignore if index already exists
+        }
     }
 
     /**
