@@ -214,6 +214,7 @@ class ArticleController extends Controller
             'source'            => 'required|max:128',
             'visible_in'        => 'required|integer|in:1,2,3',
             'video_url'         => ['nullable', 'url', new ValidYouTubeUrl],
+            'status'            => 'nullable|integer|in:1,2,3',
         ]);
 
         $article = Article::find($id);
@@ -231,14 +232,22 @@ class ArticleController extends Controller
         $validated['title_en'] = $validated['title_en'] ?? '';
         $validated['content_en'] = $validated['content_en'] ?? '';
         $validated['content_short_en'] = $validated['content_short_en'] ?? '';
+        
+        $old_status = $article->status;
 
         $article->update($validated);
+        
+        if (isset($validated['status']) && $validated['status'] == Article::PUBLISHED && $old_status != Article::PUBLISHED) {
+            ArticlePublishedNotification::dispatch($article);
+        }
 
         return new ArticleResource($article);
     }
 
     public function statusUpdate(Request $request, int $id): JsonResource
     {
+        \Illuminate\Support\Facades\Log::info("statusUpdate hit for article {$id} with data: " . json_encode($request->all()));
+        
         $auth_user = auth()->user();
         if (!$auth_user->isSuperAdmin() && !$auth_user->isEditor()) {
             throw new HttpException(403, 'You are not allowed to update status of article.');
