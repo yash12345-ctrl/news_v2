@@ -70,8 +70,9 @@ class ArticlePublishedNotification implements ShouldQueue
 
         try {
             $ret = $messaging->send($message);
+            \Illuminate\Support\Facades\Log::info('FCM Send Success: ' . json_encode($ret));
         } catch (\Exception $e) {
-            Log::error('FCM: '. $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('FCM Send Error: '. $e->getMessage());
         }
 
     }
