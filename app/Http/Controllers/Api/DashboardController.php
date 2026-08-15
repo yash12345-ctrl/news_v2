@@ -40,10 +40,10 @@ class DashboardController extends Controller
                 "returning_count" => $returning_count,
                 "source" => $source,
                 "graph" => $graph,
-                "today_visitors" => VisitorAnalytic::whereDate('last_visited_at', now()->toDateString())->count(),
-                "month_visitors" => VisitorAnalytic::whereYear('last_visited_at', now()->year)->whereMonth('last_visited_at', now()->month)->count(),
+                "today_visitors" => VisitorAnalytic::whereBetween('last_visited_at', [now()->startOfDay(), now()->endOfDay()])->count(),
+                "month_visitors" => VisitorAnalytic::whereBetween('last_visited_at', [now()->startOfMonth(), now()->endOfMonth()])->count(),
                 "three_months_visitors" => VisitorAnalytic::where('last_visited_at', '>=', now()->subMonths(3))->count(),
-                "today_new_visitors" => VisitorAnalytic::whereDate('last_visited_at', now()->toDateString())->where('visit_count', 1)->count(),
+                "today_new_visitors" => VisitorAnalytic::whereBetween('last_visited_at', [now()->startOfDay(), now()->endOfDay()])->where('visit_count', 1)->count(),
             ];
 
             return [

@@ -508,8 +508,11 @@
                                             {{ session()->get('vote_message') }}
                                         </div>
                                     @endif
+                                    <div v-if="voteMessage" class="alert alert-success" style="margin-top: 10px;" v-cloak>
+                                        @{{ voteMessage }}
+                                    </div>
                                 </div>
-                                <form ref="voteForm" action="/vote/store" method="post" class="article-section-details-vote-cards">
+                                <form ref="voteForm" action="/vote/store" @submit.prevent method="post" class="article-section-details-vote-cards">
                                     @csrf
                                     <input type="hidden" name="article_id" value="{{ $article->id }}">
                                     <input type="hidden" name="vote_type" :value="articleVoteType">
@@ -797,37 +800,31 @@ const app = new Vue({
         isEnglish: false,
         originalTitle: "",
         originalContent: "",
+        voteMessage: "",
     },
 
     methods: {
         postVote(voteType) {
-            console.log("OK");
             this.articleVoteType = voteType;
 
-            setTimeout(() => {
-                this.$refs.voteForm.submit();
-            }, 100);
+            this.$nextTick(() => {
+                const form = this.$refs.voteForm;
+                const formData = new FormData(form);
 
-            return;
-            /*
-            const url = `/api/articles/${this.vote.article_id}/votes`;
-            const headers = new Headers();
-            headers.append("content-type", "application/json");
-            const options = {
-                method: "post",
-                body: JSON.stringify(this.vote),
-                headers: headers,
-            };
-
-            fetch(url, options).then((res) => {
-                return res.json();
-            }).then((data) => {
-                console.log("OK");
-                console.log(data);
-            }).catch((error) => {
-                console.error(error);
-            })
-            */
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(response => {
+                    this.voteMessage = "Thank you! Your vote has been recorded.";
+                })
+                .catch(error => {
+                    console.error("Error submitting vote:", error);
+                });
+            });
         },
 
         textToSpeech() {

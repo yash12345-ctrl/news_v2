@@ -56,11 +56,11 @@ class ArticleController extends Controller
         $query = Article::query();
 
         if (request('from_date')) {
-            $query->whereDate('created_at', '>=', $validated['from_date']);
+            $query->where('created_at', '>=', $validated['from_date'] . ' 00:00:00');
         }
 
         if (request('to_date')) {
-            $query->whereDate('created_at', '<=', $validated['to_date']);
+            $query->where('created_at', '<=', $validated['to_date'] . ' 23:59:59');
         }
 
         if (request('category_id')) {
@@ -68,7 +68,7 @@ class ArticleController extends Controller
         }
 
         if (request('todays')) {
-            $query->whereDate('created_at', '=', date('Y-m-d'));
+            $query->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()]);
         }
 
         if (request('flag')) {
