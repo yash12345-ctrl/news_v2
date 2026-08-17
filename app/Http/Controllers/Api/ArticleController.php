@@ -579,9 +579,19 @@ class ArticleController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 $content = $data['choices'][0]['message']['content'] ?? '';
-                $decoded = json_decode($content, true);
+                
+                // Log the raw response so we can see what the model is outputting
+                \Illuminate\Support\Facades\Log::info("Groq Raw Response: " . $content);
+                
+                // Strip markdown code blocks if the model wrapped the JSON
+                $content = preg_replace('/```json\s*(.*?)\s*```/is', '$1', $content);
+                $content = preg_replace('/```\s*(.*?)\s*```/is', '$1', $content);
+                
+                $decoded = json_decode(trim($content), true);
                 if ($decoded) {
                     return response()->json($decoded);
+                } else {
+                    \Illuminate\Support\Facades\Log::error("Groq JSON Decode Failed! Cleaned content: " . $content);
                 }
             }
         }

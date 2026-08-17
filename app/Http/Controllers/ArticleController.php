@@ -215,12 +215,18 @@ class ArticleController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
                 $text = $data['choices'][0]['message']['content'] ?? '';
-                $decoded = json_decode($text, true);
+                
+                \Illuminate\Support\Facades\Log::info("Translation Controller Raw Response: " . $text);
+                
+                $text = preg_replace('/```json\s*(.*?)\s*```/is', '$1', $text);
+                $text = preg_replace('/```\s*(.*?)\s*```/is', '$1', $text);
+                
+                $decoded = json_decode(trim($text), true);
                 if ($decoded) {
                     \Illuminate\Support\Facades\Log::info("Translation Controller: Success! Decoded JSON.");
                     return $decoded;
                 } else {
-                    \Illuminate\Support\Facades\Log::error("Translation Controller: JSON Decode Failed! Raw text: " . $text);
+                    \Illuminate\Support\Facades\Log::error("Translation Controller: JSON Decode Failed! Cleaned text: " . $text);
                 }
             } else {
                 \Illuminate\Support\Facades\Log::error("Translation Controller: HTTP Failed! Status: " . $response->status() . ", Body: " . $response->body());
