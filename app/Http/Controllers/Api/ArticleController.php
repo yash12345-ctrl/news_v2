@@ -114,8 +114,8 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'title_en'          => 'nullable|max:255',
             'title_ur'          => 'required|max:255',
-            'content_short_en'  => 'nullable|max:256',
-            'content_short_ur'  => 'nullable|max:256',
+            'content_short_en'  => 'nullable',
+            'content_short_ur'  => 'nullable',
             'content_en'        => 'nullable',
             'content_ur'        => 'required',
             'category_id'       => 'required|exists:categories,id',
@@ -206,8 +206,8 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'title_en'          => 'nullable|max:255',
             'title_ur'          => 'required|max:255',
-            'content_short_en'  => 'nullable|max:256',
-            'content_short_ur'  => 'nullable|max:256',
+            'content_short_en'  => 'nullable',
+            'content_short_ur'  => 'nullable',
             'content_en'        => 'nullable',
             'content_ur'        => 'required',
             'category_id'       => 'required|numeric|exists:categories,id',
