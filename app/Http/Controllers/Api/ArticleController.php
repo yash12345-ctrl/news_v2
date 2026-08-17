@@ -48,7 +48,7 @@ class ArticleController extends Controller
                 'to_date'       => 'nullable|date',
                 'category_id'   => 'nullable|exists:categories,id',
                 'todays'        => 'nullable|min:1',
-                'search'        => 'nullable|max:128',
+                'search'        => 'nullable|max:255',
                 'status'        => 'nullable|in:1,2,3',
                 'flag'          => 'nullable|in:1,2',
             ]);
@@ -112,15 +112,15 @@ class ArticleController extends Controller
         }
 
         $validated = $request->validate([
-            'title_en'          => 'nullable|max:128',
-            'title_ur'          => 'required|max:128',
+            'title_en'          => 'nullable|max:255',
+            'title_ur'          => 'required|max:255',
             'content_short_en'  => 'nullable|max:256',
             'content_short_ur'  => 'nullable|max:256',
             'content_en'        => 'nullable',
             'content_ur'        => 'required',
             'category_id'       => 'required|exists:categories,id',
             'article_url'       => 'nullable|url',
-            'source'            => 'required|max:128',
+            'source'            => 'required|max:255',
             'visible_in'        => 'required|integer|in:1,2,3',
             'video_url'         => ['nullable', 'url', new ValidYouTubeUrl],
         ]);
@@ -204,14 +204,14 @@ class ArticleController extends Controller
         }
 
         $validated = $request->validate([
-            'title_en'          => 'nullable|max:128',
-            'title_ur'          => 'required|max:128',
+            'title_en'          => 'nullable|max:255',
+            'title_ur'          => 'required|max:255',
             'content_short_en'  => 'nullable|max:256',
             'content_short_ur'  => 'nullable|max:256',
             'content_en'        => 'nullable',
             'content_ur'        => 'required',
             'category_id'       => 'required|numeric|exists:categories,id',
-            'source'            => 'required|max:128',
+            'source'            => 'required|max:255',
             'visible_in'        => 'required|integer|in:1,2,3',
             'video_url'         => ['nullable', 'url', new ValidYouTubeUrl],
             'status'            => 'nullable|integer|in:1,2,3',
