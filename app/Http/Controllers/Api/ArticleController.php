@@ -566,7 +566,7 @@ class ArticleController extends Controller
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type' => 'application/json',
             ])->post('https://api.groq.com/openai/v1/chat/completions', [
-                'model' => 'llama-3.1-8b-instant',
+                'model' => 'mixtral-8x7b-32768',
                 'messages' => [
                     ['role' => 'system', 'content' => 'You are a professional translator that strictly returns valid JSON and translates Urdu to pure, formal English.'],
                     ['role' => 'user', 'content' => $prompt]
@@ -575,6 +575,7 @@ class ArticleController extends Controller
                 'temperature' => 0.3,
             ]);
 
+            if (!$response->successful()) { \Illuminate\Support\Facades\Log::error("Groq API Failed: " . $response->body()); }
             if ($response->successful()) {
                 $data = $response->json();
                 $content = $data['choices'][0]['message']['content'] ?? '';
