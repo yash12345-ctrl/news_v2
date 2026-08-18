@@ -26,7 +26,7 @@ class ENewsPaperPageController extends Controller
         }
 
         $validated = $request->validate([
-            'photo'          => 'required|file|mimes:jpg,jpeg|max:2048', // 2 MB File
+            'photo'          => 'required|file|mimes:jpg,jpeg|max:10240', // 10 MB File
             'page_number'    => 'required|integer',
         ]);
 
@@ -35,11 +35,6 @@ class ENewsPaperPageController extends Controller
             throw new NotFoundResourceException("The E-News Paper with ID '$id' does not exist.");
         }
 
-        if ($auth_user->isEditor() && $auth_user->id !== $enews_paper->admin_id) {
-            throw ValidationException::withMessages([
-                'error' => ["E-News with ID '{$enews_paper->id}' does not belong to you"],
-            ]);
-        }
 
         $file = $request->file('photo');
 
