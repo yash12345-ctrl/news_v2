@@ -147,11 +147,11 @@
     <div class="container">
         <div class="premium-mag-section">
                 <style>
-                    .premium-mag-section { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; align-items: start; padding-top: 20px; padding-bottom: 0; }
+                    .premium-mag-section { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; align-items: stretch; padding-top: 20px; padding-bottom: 0; }
 
-                    .premium-mag-card { text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative; }
+                    .premium-mag-card { text-decoration: none; color: inherit; display: flex; flex-direction: column; position: relative; background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.03); height: 100%; }
 
-                    .premium-mag-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 12px; position: relative; }
+                    .premium-mag-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 12px; position: relative; }
                     .premium-mag-header::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 60px; height: 2px; background: #e31e24; }
 
                     .premium-mag-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; color: #111; margin: 0; display: flex; align-items: center; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -181,8 +181,8 @@
                     .premium-mag-card:hover .premium-read-btn svg { transform: translateX(4px); }
 
                     /* Unified Ad Card */
-                    .premium-ad-container { display: flex; flex-direction: column; height: 100%; }
-                    .premium-ad-card { background: linear-gradient(145deg, #ffffff 0%, #f3f4f6 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 3 / 4; position: relative; text-decoration: none; overflow: hidden; box-shadow: 0 12px 32px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.03); }
+                    .premium-ad-container { display: flex; flex-direction: column; height: 100%; background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.03); }
+                    .premium-ad-card { background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 3 / 4; position: relative; text-decoration: none; overflow: hidden; border: 1px solid rgba(0,0,0,0.03); }
                     .premium-ad-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; }
                     .premium-ad-card:hover img { transform: scale(1.03); }
                     .premium-ad-label { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.8); color: #fff; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 4px; letter-spacing: 1.5px; text-transform: uppercase; z-index: 2; }
@@ -299,6 +299,22 @@
 
             <!-- Popular Today Split Section -->
             <div style="width: 100%;">
+                <!-- Premium Section Card Wrapper -->
+                <div class="section-card-box">
+                <style>
+                    .section-card-box {
+                        background: #fff;
+                        border-radius: 20px;
+                        box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+                        padding: 32px 32px 28px 32px;
+                        margin-bottom: 32px;
+                        border: 1px solid rgba(0,0,0,0.04);
+                    }
+                    @media (max-width: 768px) {
+                        .section-card-box { padding: 20px 16px 20px 16px; border-radius: 14px; }
+                    }
+                </style>
+
                 <!-- Premium Header -->
                 <div class="pop-header premium-trending-header-mobile" style="margin-bottom: 24px; direction: ltr; display: flex !important; flex-direction: row !important; justify-content: space-between; align-items: flex-start !important;">
                     <h2 class="pop-title premium-trending-title-mobile" style="margin: 0;">
@@ -441,6 +457,7 @@
                     })();
                 </script>
                 @endif
+                </div>{{-- /.section-card-box --}}
             </div>
         </div>
     </div>
@@ -450,16 +467,16 @@
 
 <section class="section bg-primary trending-article-section has-border-bottom pt-0">
     <div class="container">
-        <!-- Premium Header -->
-        <div class="pop-header premium-trending-header-mobile" style="margin-bottom: 24px; padding-top: 40px; direction: ltr; display: flex !important; flex-direction: row !important; justify-content: space-between; align-items: flex-start !important;">
-            <h2 class="pop-title premium-trending-title-mobile" style="margin: 0;">
-                <span class="tt-main" style="font-size: 24px !important; line-height: 1.1;">Latest</span>
-                <span class="tt-sub" style="font-size: 32px !important;">Articles</span>
-            </h2>
-            <div class="trending-supertitle" style="margin-top: 8px;">Just In</div>
-        </div>
         <div class="section-wrapper" style="gap: 48px;">
-            <div class="trending-article-cards" style="flex: 1; min-width: 0;">
+            <div class="section-card-box trending-article-cards" style="flex: 1; min-width: 0; margin-bottom: 0;">
+                <!-- Premium Header -->
+                <div class="pop-header premium-trending-header-mobile" style="margin-bottom: 24px; padding-top: 0; direction: ltr; display: flex !important; flex-direction: row !important; justify-content: space-between; align-items: flex-start !important;">
+                    <h2 class="pop-title premium-trending-title-mobile" style="margin: 0;">
+                        <span class="tt-main" style="font-size: 24px !important; line-height: 1.1;">Latest</span>
+                        <span class="tt-sub" style="font-size: 32px !important;">Articles</span>
+                    </h2>
+                    <div class="trending-supertitle" style="margin-top: 8px;">Just In</div>
+                </div>
                 <style>
                     .premium-news-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.05); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; height: 100%; position: relative; }
                     .premium-news-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
@@ -620,14 +637,8 @@
                                 <h3 class="premium-news-title">{{$d->title}}</h3>
                                 <p class="premium-news-excerpt">{{$d->content_short}}</p>
                                 <div class="premium-news-meta">
-                                    <div class="premium-news-meta-item">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.0003 3C17.3924 3 21.8784 6.87976 22.8189 12C21.8784 17.1202 17.3924 21 12.0003 21C6.60812 21 2.12215 17.1202 1.18164 12C2.12215 6.87976 6.60812 3 12.0003 3ZM12.0003 19C16.2359 19 19.8603 16.052 20.7777 12C19.8603 7.94803 16.2359 5 12.0003 5C7.7646 5 4.14022 7.94803 3.22278 12C4.14022 16.052 7.7646 19 12.0003 19ZM12.0003 16.5C9.51498 16.5 7.50026 14.4853 7.50026 12C7.50026 9.51472 9.51498 7.5 12.0003 7.5C14.4855 7.5 16.5003 9.51472 16.5003 12C16.5003 14.4853 14.4855 16.5 12.0003 16.5ZM12.0003 14.5C13.381 14.5 14.5003 13.3807 14.5003 12C14.5003 10.6193 13.381 9.5 12.0003 9.5C10.6196 9.5 9.50026 10.6193 9.50026 12C9.50026 13.3807 10.6196 14.5 12.0003 14.5Z"></path></svg>
-                                        <span>{{$d->views}}</span>
-                                    </div>
-                                    <div class="premium-news-meta-item">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3H14C18.4183 3 22 6.58172 22 11C22 15.4183 18.4183 19 14 19V22.5C9 20.5 2 17.5 2 11C2 6.58172 5.58172 3 10 3ZM12 17H14C17.3137 17 20 14.3137 20 11C20 7.68629 17.3137 5 14 5H10C6.68629 5 4 7.68629 4 11C4 14.61 6.46208 16.9656 12 19.4798V17Z"></path></svg>
-                                        <span>0</span>
-                                    </div>
+
+
                                     <div class="premium-news-meta-item">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 11H4V19H20V11ZM7 5H4V9H20V5H17V7H15V5H9V7H7V5Z"></path></svg>
                                         <span style="direction: ltr; display: inline-block;">{{date("d/m/Y", strtotime($d->created_at))}}</span>
@@ -647,7 +658,7 @@
                     </a>
                 </div>
             </div>
-            <div class="trending-article-contents home-latest-sidebar" style="flex: 0 0 450px; max-width: 450px; width: 100%; border-left: none;">
+            <div class="section-card-box trending-article-contents home-latest-sidebar" style="flex: 0 0 450px; max-width: 450px; width: 100%; border-left: none; margin-bottom: 0;">
                 <div class="trending-article-contents-wrapper" style="padding: 0;">
                     <style>
                         .premium-trending-list { display: flex; flex-direction: column; }
@@ -765,14 +776,13 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </section>
 
 <section class="section bg-primary">
     <div class="container">
+        <div class="section-card-box">
         <!-- Premium Header -->
-        <div class="pop-header" style="margin-bottom: 24px; padding-top: 32px; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; direction: ltr;">
+        <div class="pop-header" style="margin-bottom: 24px; padding-top: 0; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; direction: ltr;">
             <h2 class="pop-title premium-trending-title-mobile" style="margin: 0;">
                 <span class="tt-main" style="font-size: 24px !important; line-height: 1.1;">Past Popular</span>
                 <span class="tt-sub" style="font-size: 32px !important;">Articles</span>
@@ -912,6 +922,7 @@
             document.getElementById('ppaSplit').addEventListener('mouseleave', function() { timer = setInterval(autoNext, 6000); });
         })();
         </script>
+        </div>{{-- /.section-card-box --}}
         </div>
     </div>
 </section>

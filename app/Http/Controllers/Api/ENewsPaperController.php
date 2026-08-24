@@ -64,7 +64,7 @@ class ENewsPaperController extends Controller
 			'edition'       => 'required|integer',
 			'subtitle'      => 'nullable|max:256',
 			'description'   => 'nullable|max:512',
-            'created_at'    => 'nullable|date|after_or_equal:today',
+            'created_at'    => 'nullable|date',
 		]);
 
 		$validated['slug'] = $this->createSlug($validated['title']);
@@ -185,7 +185,7 @@ class ENewsPaperController extends Controller
             'edition'       => 'required|integer',
             'subtitle'      => 'nullable|max:256',
             'description'   => 'nullable|max:512',
-            'created_at'    => 'nullable|date|after_or_equal:today',
+            'created_at'    => 'nullable|date',
         ]);
 
         $enews = ENewsPaper::find($id);
