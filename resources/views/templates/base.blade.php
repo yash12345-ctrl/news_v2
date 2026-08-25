@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="/assets/css/styles.css?v=1.2.2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@400;600;700;900&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:wght@400;600;700;900&family=Noto+Nastaliq+Urdu:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,900;1,400&display=swap" rel="stylesheet">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9409984276673694" crossorigin="anonymous"></script>
 
@@ -47,7 +47,7 @@ src="https://www.facebook.com/tr?id=2034710906924811&ev=PageView&noscript=1"
 </head>
 <body class="{{!isset($ltr) && lang_urdu() ? 'layout-rtl' : ''}}">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,400&display=swap');
+
 
 /* Prevent horizontal scroll on all screen sizes */
 html, body {

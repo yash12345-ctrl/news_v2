@@ -135,6 +135,8 @@ class ArticleController extends Controller
             $digital_ad = $digital_ads->random();
         }
 
+        $trending_video = \App\Models\TrendingVideo::where('status', 1)->inRandomOrder()->first();
+
         $categories_top = Category::whereIn('name_en', $top_categories)->get();
         $category_map = [];
   
@@ -144,7 +146,7 @@ class ArticleController extends Controller
         }
 
         return view('Article.show', [
-            'category_map'    => $category_map,
+            'category_map'      => $category_map,
             'categories'        => $categories,
             'article'           => $article,
             'related_articles'  => $related_articles,
@@ -153,6 +155,7 @@ class ArticleController extends Controller
             'count_vote'        => $count_vote,
             'article_comments'  => $article_comments,
             "digital_ad"        => $digital_ad,
+            "trending_video"    => $trending_video,
         ]);
     }
     public function translate(Request $request, $id)

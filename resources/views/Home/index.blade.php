@@ -63,9 +63,10 @@
                     <a href="{{$data['last_article']['article_url']}}" style="display: flex; flex-direction: column; flex: 1; position: relative; width: 100%; min-height: 410px; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.15);">
                         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
                             @if ($data['last_article']->isVideoArticle())
-                                <img src="{{$data['last_article']['image_url']}}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" alt="{{$data['last_article']['title']}}">
+                                <img src="{{$data['last_article']['image_url']}}" style="width: 100%; height: 100%; object-fit: cover;" fetchpriority="high" alt="{{$data['last_article']['title']}}">
                             @else
-                                <iframe src="https://www.youtube.com/embed/{{ $data['last_article']->extractVideoId($data['last_article']->video_url) }}" style="width: 100%; height: 100%; object-fit: cover;" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                @php $videoId = $data['last_article']->extractVideoId($data['last_article']->video_url); @endphp
+                                <iframe src="https://www.youtube.com/embed/{{ $videoId }}" style="width: 100%; height: 100%; object-fit: cover; border: none;" title="YouTube video player" srcdoc="<style>*{padding:0;margin:0;overflow:hidden}html,body{height:100%}img,span{position:absolute;width:100%;top:0;bottom:0;margin:auto;object-fit:cover;height:100%}span{height:1.5em;text-align:center;font:48px/1.5 sans-serif;color:white;text-shadow:0 0 0.5em black}</style><a href=https://www.youtube.com/embed/{{ $videoId }}?autoplay=1><img src=https://img.youtube.com/vi/{{ $videoId }}/hqdefault.jpg alt='YouTube Video'><span>▶</span></a>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
                             @endif
                         </div>
 
@@ -203,7 +204,7 @@
                         @php $ad = $box3_ad; @endphp
                         <a href="/ad-track/{{ $ad->id }}" target="_blank" class="premium-ad-card" style="display: flex; flex-direction: column; justify-content: flex-end; position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 12px 32px rgba(0,0,0,0.08); text-decoration: none;">
                             <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;">
-                                <img src="{{ $ad->media_url }}" alt="{{ $ad->title }}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                                <img src="{{ $ad->media_url }}" alt="{{ $ad->title }}" loading="lazy" decoding="async" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
                             @if(false)<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(15,17,21,0) 0%, rgba(15,17,21,0.2) 40%, rgba(15,17,21,0.95) 100%); z-index: 1;"></div>@endif
                             <div style="position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; z-index: 2; border: 1px solid rgba(255,255,255,0.1);">Advertisement</div>
@@ -245,7 +246,7 @@
                     </div>
                     <div class="premium-mag-stack">
                         <!-- Main Image -->
-                        <img class="layer-1" src="{{ $data['enews'] && $data['enews']['image_url'] ? $data['enews']['image_url'] : '/assets/img/default-image.jpg' }}" alt="E-Paper Main">
+                        <img class="layer-1" src="{{ $data['enews'] && $data['enews']['image_url'] ? $data['enews']['image_url'] : '/assets/img/default-image.jpg' }}" alt="E-Paper Main" loading="lazy" decoding="async">
 
                         <!-- Side Images layered behind -->
                         @if(isset($data['enews_paper_page']) && is_array($data['enews_paper_page']))
@@ -318,8 +319,8 @@
                 <!-- Premium Header -->
                 <div class="pop-header premium-trending-header-mobile" style="margin-bottom: 24px; direction: ltr; display: flex !important; flex-direction: row !important; justify-content: space-between; align-items: flex-start !important;">
                     <h2 class="pop-title premium-trending-title-mobile" style="margin: 0;">
-                        <span class="tt-main" style="font-size: 24px !important; line-height: 1.1;">Popular</span>
-                        <span class="tt-sub" style="font-size: 32px !important;">Today</span>
+                        <span class="tt-main" >Popular</span>
+                        <span class="tt-sub" >Today</span>
                     </h2>
                     <div class="trending-supertitle">Most Read</div>
                 </div>
@@ -328,7 +329,27 @@
                     /* HEADER */
                     .pop-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 12px; position: relative; }
                     .pop-header::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 60px; height: 2px; background: #e31e24; }
-                    .pop-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; color: #111; margin: 0; letter-spacing: 0.5px; text-transform: uppercase; }
+                    .pop-title { margin: 0; line-height: 1; display: flex; flex-direction: column; align-items: flex-start; }
+                    /* ── Unified section heading typography ── */
+                    .pop-title .tt-main {
+                        font-family: 'Inter', sans-serif;
+                        font-size: 13px;
+                        font-weight: 800;
+                        color: #aaa;
+                        text-transform: uppercase;
+                        letter-spacing: 3px;
+                        line-height: 1.2;
+                        margin-bottom: 2px;
+                    }
+                    .pop-title .tt-sub {
+                        font-family: 'Playfair Display', serif;
+                        font-size: 30px;
+                        font-style: italic;
+                        font-weight: 700;
+                        line-height: 1.1;
+                        color: #111;
+                        padding-right: 6px; /* prevent italic clipping */
+                    }
                     /* LEFT PANEL */
                     .pop-split { display: flex; gap: 32px; align-items: stretch; height: 420px; }
                     .pop-left-panel { flex: 0 0 46%; position: relative; border-radius: 22px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.18); background: #111; text-decoration: none; color: inherit; display: block; }
@@ -378,7 +399,7 @@
                 <div class="pop-split">
                     <!-- LEFT: Big Featured Image -->
                     <a href="{{ $popularArticles[0]['article_url'] }}" class="pop-left-panel" id="popFeaturedLink">
-                        <img src="{{ $popularArticles[0]['image_url'] }}" alt="{{ $popularArticles[0]['title'] }}" id="popFeaturedImg">
+                        <img src="{{ $popularArticles[0]['image_url'] }}" alt="{{ $popularArticles[0]['title'] }}" id="popFeaturedImg" loading="lazy" decoding="async">
                         <div class="pop-overlay"></div>
                         <div class="pop-info">
                             <span class="pop-badge">
@@ -402,7 +423,7 @@
                                data-url="{{ $pa['article_url'] }}"
                                onclick="popSelectItem(event, this)">
                                 <span class="pop-rank">{{ $i + 1 }}</span>
-                                <div class="pop-thumb"><img src="{{ $pa['image_sm_url'] }}" alt="{{ $pa['title'] }}"></div>
+                                <div class="pop-thumb"><img src="{{ $pa['image_sm_url'] }}" alt="{{ $pa['title'] }}" loading="lazy" decoding="async"></div>
                                 <div class="pop-text">
                                     <h4>
                                         {{$pa['title']}}
@@ -472,8 +493,8 @@
                 <!-- Premium Header -->
                 <div class="pop-header premium-trending-header-mobile" style="margin-bottom: 24px; padding-top: 0; direction: ltr; display: flex !important; flex-direction: row !important; justify-content: space-between; align-items: flex-start !important;">
                     <h2 class="pop-title premium-trending-title-mobile" style="margin: 0;">
-                        <span class="tt-main" style="font-size: 24px !important; line-height: 1.1;">Latest</span>
-                        <span class="tt-sub" style="font-size: 32px !important;">Articles</span>
+                        <span class="tt-main" >Latest</span>
+                        <span class="tt-sub" >Articles</span>
                     </h2>
                     <div class="trending-supertitle" style="margin-top: 8px;">Just In</div>
                 </div>
@@ -721,34 +742,9 @@
                                 100% { box-shadow: 0 0 0 0 rgba(227,30,36,0); }
                             }
                             
-                            .premium-trending-title-mobile {
-                                margin: 0;
-                                line-height: 1;
-                                display: flex;
-                                flex-direction: column;
-                                align-items: flex-start !important;
-                                text-align: left !important;
-                            }
-                            .premium-trending-title-mobile .tt-main {
-                                font-family: 'Inter', sans-serif !important;
-                                font-size: 32px !important;
-                                font-weight: 900 !important;
-                                color: #111 !important;
-                                text-transform: uppercase !important;
-                                letter-spacing: -1px !important;
-                            }
-                            .premium-trending-title-mobile .tt-sub {
-                                font-family: 'Playfair Display', serif !important;
-                                font-size: 36px !important;
-                                font-style: italic !important;
-                                font-weight: 400 !important;
-                                margin-top: -4px;
-                                background: linear-gradient(135deg, #e31e24 0%, #ff5e62 100%);
-                                -webkit-background-clip: text;
-                                -webkit-text-fill-color: transparent;
-                                padding-right: 10px; /* prevent italic clipping */
-                            }
-                    </style>
+                    /* Unified tt styles already defined globally in .pop-title above */
+                    .premium-trending-title-mobile { align-items: flex-start !important; text-align: left !important; }
+                </style>
                     <div class="pop-header premium-trending-header-mobile" style="margin-bottom: 24px; padding-top: 40px;">
                         <h2 class="pop-title premium-trending-title-mobile">
                             <span class="tt-main">Trending</span>
@@ -784,8 +780,8 @@
         <!-- Premium Header -->
         <div class="pop-header" style="margin-bottom: 24px; padding-top: 0; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; direction: ltr;">
             <h2 class="pop-title premium-trending-title-mobile" style="margin: 0;">
-                <span class="tt-main" style="font-size: 24px !important; line-height: 1.1;">Past Popular</span>
-                <span class="tt-sub" style="font-size: 32px !important;">Articles</span>
+                <span class="tt-main" >Past Popular</span>
+                <span class="tt-sub" >Articles</span>
             </h2>
             <a class="section-header-cta-button" href="/articles?past_popular" style="text-decoration: none; display: flex; align-items: center; gap: 4px; flex-shrink: 0; margin-left: auto; padding-bottom: 4px;">
                 <span class="section-header-cta-text" style="font-family: 'Inter', sans-serif; font-weight: 800; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; color: #111;">view more</span>
@@ -859,7 +855,7 @@
                 <button class="ppa-panel-item {{ $idx === 0 ? 'ppa-active' : '' }}" onclick="ppaSelect({{ $idx }})" data-idx="{{ $idx }}">
                     <div class="ppa-panel-num">{{ sprintf('%02d', $idx + 1) }}</div>
                     <div class="ppa-panel-thumb">
-                        <img src="{{ $article->image_sm_url }}" alt="{{ $article->title }}" loading="lazy">
+                        <img src="{{ $article->image_sm_url }}" alt="{{ $article->title }}" loading="lazy" decoding="async">
                     </div>
                     <div class="ppa-panel-content">
                         <h4 class="ppa-panel-title">{{ $article->title }}</h4>

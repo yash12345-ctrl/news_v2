@@ -269,7 +269,7 @@
     font-size: 13px;
     font-weight: 600;
     color: #1a1a1a;
-    line-height: 2.2;
+    line-height: 1.5;
     transition: color 180ms ease;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -301,28 +301,73 @@
 .am-video-thumb-wrap { position: absolute; inset: 0; width: 100%; height: 100%; background-color: #0f172a; background-position: center; background-size: cover; background-repeat: no-repeat; z-index: 0; }
 .am-video-thumb-wrap::before { content: ''; position: absolute; inset: 0; background: inherit; filter: blur(2px) scale(1.05); transition: transform 0.8s ease; z-index: 0; }
 .am-video-card:hover .am-video-thumb-wrap::before { transform: scale(1.1); }
-.am-video-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.6) 40%, rgba(15,23,42,0.1) 100%); transition: opacity 0.5s ease; z-index: 1; }
+.am-video-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.5) 45%, rgba(15,23,42,0.1) 100%); transition: opacity 0.5s ease; z-index: 1; }
 .am-video-card:hover .am-video-overlay { background: linear-gradient(to top, rgba(15,23,42,1) 0%, rgba(15,23,42,0.7) 50%, rgba(15,23,42,0.2) 100%); }
-.am-video-play-btn { position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); z-index: 2; width: 64px; height: 64px; background: rgba(255,255,255,0.2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.5); color: #fff; transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1); }
+.am-video-play-btn { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); z-index: 2; width: 54px; height: 54px; background: rgba(255,255,255,0.15); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(255,255,255,0.4); color: #fff; transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1); }
 .am-video-play-btn::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.4); opacity: 0; transform: scale(0.8); transition: all 0.5s ease; pointer-events: none; }
 .am-video-card:hover .am-video-play-btn { background: #ffffff; color: #0f172a; transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,1); }
 .am-video-card:hover .am-video-play-btn::before { opacity: 1; transform: scale(1); animation: ping-play 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
 @keyframes ping-play { 75%, 100% { transform: scale(1.5); opacity: 0; } }
-.am-video-play-btn svg { width: 28px; height: 28px; margin-left: 4px; fill: currentColor; }
+.am-video-play-btn svg { width: 24px; height: 24px; margin-left: 3px; fill: currentColor; }
 .am-video-duration { position: absolute; top: 20px; right: 20px; z-index: 2; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 8px 16px; border-radius: 30px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(255,255,255,0.15); transition: all 0.3s ease; }
 .am-video-card:hover .am-video-duration { background: #ffffff; color: #0f172a; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 .am-video-duration svg { width: 14px; height: 14px; fill: currentColor; }
-.am-video-content { margin-top: auto; padding: 30px; text-align: left; display: flex; flex-direction: column; z-index: 2; position: relative; }
-.am-video-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 800; color: #ffffff; line-height: 2.2; margin: 0 0 12px 0; letter-spacing: -0.2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.4s ease; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.am-video-content { margin-top: auto; padding: 24px; text-align: left; display: flex; flex-direction: column; z-index: 2; position: relative; }
+.am-video-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 800; color: #ffffff; line-height: 1.3; margin: 0 0 8px 0; letter-spacing: 0px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.4s ease; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 .am-video-card:hover .am-video-title { color: #38bdf8; }
-.am-video-desc { font-family: 'Inter', sans-serif; font-size: 14.5px; color: #cbd5e1; margin: 0 0 24px 0; line-height: 2.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400; }
+.am-video-desc { font-family: 'Inter', sans-serif; font-size: 13px; color: #cbd5e1; margin: 0 0 16px 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400; }
 .am-video-meta { display: flex; align-items: center; gap: 8px; }
-.am-video-time { font-family: 'Inter', sans-serif; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.am-video-time { font-family: 'Inter', sans-serif; font-size: 11.5px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .am-video-time::before { content: ''; width: 6px; height: 6px; background: #38bdf8; border-radius: 50%; display: block; box-shadow: 0 0 8px rgba(56,189,248,0.5); transition: all 0.4s ease; }
 .am-video-card:hover .am-video-time::before { background: #7dd3fc; box-shadow: 0 0 12px rgba(125,211,252,0.8); }
 </style>
 
-<section class="section has-border-bottom" style="min-height: 60vh; padding: 60px 0; background: #f3f4f7;">
+<style>
+/* ── Featured Hero Card ─────────────────── */
+.tv-featured-card { border-radius: 24px; overflow: hidden; position: relative; min-height: 480px; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: 0 20px 60px rgba(0,0,0,0.16); margin-bottom: 32px; cursor: pointer; transition: transform 0.4s ease, box-shadow 0.4s ease; text-decoration: none; color: inherit; }
+.tv-featured-card:hover { transform: translateY(-4px); box-shadow: 0 30px 80px rgba(0,0,0,0.22); }
+.tv-featured-thumb { position: absolute; inset: 0; background-size: cover; background-position: center; transition: transform 0.8s ease; }
+.tv-featured-card:hover .tv-featured-thumb { transform: scale(1.04); }
+.tv-featured-gradient { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.93) 0%, rgba(0,0,0,0.4) 55%, rgba(0,0,0,0.04) 100%); }
+.tv-featured-badge { display: inline-flex; align-items: center; gap: 7px; background: #e31e24; color: #fff; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; padding: 6px 14px; border-radius: 50px; margin-bottom: 14px; width: fit-content; }
+.tv-featured-badge::before { content: ''; width: 6px; height: 6px; background: #fff; border-radius: 50%; animation: am-pulse 1.2s ease-in-out infinite; }
+.tv-featured-body { position: relative; z-index: 2; padding: 40px; }
+.tv-featured-play-btn { position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%); z-index: 3; width: 72px; height: 72px; background: rgba(255,255,255,0.18); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 12px rgba(255,255,255,0.08), 0 10px 30px rgba(0,0,0,0.3); color: #fff; transition: all 0.4s ease; }
+.tv-featured-card:hover .tv-featured-play-btn { background: rgba(255,255,255,0.95); color: #111; box-shadow: 0 0 0 16px rgba(255,255,255,0.1), 0 15px 40px rgba(0,0,0,0.4); }
+.tv-featured-play-btn svg { width: 28px; height: 28px; margin-left: 4px; fill: currentColor; }
+.tv-featured-title { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 800; color: #fff; line-height: 1.3; margin: 0 0 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.4); max-width: 700px; }
+.tv-featured-desc { font-family: 'Inter', sans-serif; font-size: 14px; color: rgba(255,255,255,0.65); margin: 0 0 20px; line-height: 1.6; max-width: 600px; }
+.tv-featured-meta { display: flex; align-items: center; gap: 16px; }
+.tv-featured-time { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 8px; }
+.tv-featured-time::before { content: ''; width: 5px; height: 5px; background: #38bdf8; border-radius: 50%; display: block; box-shadow: 0 0 8px rgba(56,189,248,0.6); }
+.tv-featured-watch-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: #111; border-radius: 50px; padding: 10px 22px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; transition: all 0.3s ease; }
+.tv-featured-card:hover .tv-featured-watch-btn { background: #e31e24; color: #fff; }
+
+/* ── Filter Pills ─────────────────────── */
+.tv-filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
+.tv-filter-pill { padding: 8px 20px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 700; cursor: pointer; transition: all 0.25s ease; border: 1.5px solid #e5e5e5; background: #fff; color: #888; letter-spacing: 0.3px; }
+.tv-filter-pill:hover { border-color: #e31e24; color: #e31e24; }
+.tv-filter-pill.active { background: #e31e24; color: #fff; border-color: #e31e24; box-shadow: 0 4px 14px rgba(227,30,36,0.3); }
+
+/* ── Section label ─────────────────────── */
+.tv-section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.tv-section-label-text { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #111; }
+.tv-section-label-line { flex: 1; height: 1px; background: linear-gradient(to right, #e5e5e5, transparent); }
+.tv-section-label-accent { width: 28px; height: 3px; background: linear-gradient(90deg, #e31e24, #ff6b6b); border-radius: 3px; flex-shrink: 0; }
+
+@media (max-width: 768px) {
+    .tv-featured-card { min-height: 300px; }
+    .tv-featured-title { font-size: 20px; }
+    .tv-featured-body { padding: 24px; }
+    .tv-featured-play-btn { width: 56px; height: 56px; }
+    .am-video-grid-3 { grid-template-columns: 1fr !important; }
+}
+@media (max-width: 900px) and (min-width: 601px) {
+    .am-video-grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+}
+</style>
+
+<section class="section has-border-bottom" style="min-height: 60vh; padding: 60px 0; background: #f7f8fa;">
 	<div class="container">
         
         {{-- ── Page Header — Advanced Editorial Banner ── --}}
@@ -364,72 +409,80 @@
 
         <div class="am-layout">
             <div class="am-grid-area">
-                <div class="section-text" style="text-align: center; margin: 0 auto; width: 100%;">
-                    <div style="margin-top: 20px;">
-                        <!-- Placeholder for video grid -->
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
-                            @forelse($videos as $video)
-                            <div class="am-video-card">
-                                <a href="{{ $video->video_url }}" onclick="openVideoModal('{{ $video->video_url }}', '{{ addslashes($video->title) }}', event)" class="am-video-link">
-                                    <div class="am-video-thumb-wrap" style="background-image: url('{{ $video->thumbnail_url }}');">
-                                        <div class="am-video-overlay"></div>
-                                    </div>
-                                    <div class="am-video-play-btn">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3L19 12L5 21V3Z" fill="currentColor"></path></svg>
-                                    </div>
-                                    <div class="am-video-duration">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 9.2L21 6V18L17 14.8V19C17 19.5523 16.5523 20 16 20H4C3.44772 20 3 19.5523 3 19V5C3 4.44772 3.44772 4 4 4H16C16.5523 4 17 4.44772 17 5V9.2ZM15 10.3243V6H5V18H15V13.6757L19 16.5514V7.44855L15 10.3243Z"></path></svg>
-                                        Watch Now
-                                    </div>
-                                    <div class="am-video-content">
-                                        <h3 class="am-video-title">{{ $video->title }}</h3>
-                                        @if($video->description)
-                                        <p class="am-video-desc">{{ Str::limit($video->description, 80) }}</p>
-                                        @endif
-                                        <div class="am-video-meta">
-                                            <span class="am-video-time">{{ $video->created_at->diffForHumans() }}</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            @empty
-                            <!-- Video Skeleton Card 1 -->
-                            <div class="am-video-card">
-                                <div class="am-video-thumb-wrap" style="background: #334155;">
-                                    <div class="am-video-overlay" style="background: linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.2));"></div>
-                                </div>
-                                <div class="am-video-content">
-                                    <div style="height: 20px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-bottom: 12px; width: 85%;"></div>
-                                    <div style="height: 16px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 24px; width: 60%;"></div>
-                                    <div class="am-video-meta"><div style="height: 14px; background: rgba(255,255,255,0.1); border-radius: 4px; width: 40%;"></div></div>
-                                </div>
-                            </div>
-                            <!-- Video Skeleton Card 2 -->
-                            <div class="am-video-card">
-                                <div class="am-video-thumb-wrap" style="background: #334155;">
-                                    <div class="am-video-overlay" style="background: linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.2));"></div>
-                                </div>
-                                <div class="am-video-content">
-                                    <div style="height: 20px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-bottom: 12px; width: 95%;"></div>
-                                    <div style="height: 16px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 24px; width: 75%;"></div>
-                                    <div class="am-video-meta"><div style="height: 14px; background: rgba(255,255,255,0.1); border-radius: 4px; width: 50%;"></div></div>
-                                </div>
-                            </div>
-                            <!-- Video Skeleton Card 3 -->
-                            <div class="am-video-card">
-                                <div class="am-video-thumb-wrap" style="background: #334155;">
-                                    <div class="am-video-overlay" style="background: linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.2));"></div>
-                                </div>
-                                <div class="am-video-content">
-                                    <div style="height: 20px; background: rgba(255,255,255,0.2); border-radius: 4px; margin-bottom: 12px; width: 80%;"></div>
-                                    <div style="height: 16px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 24px; width: 50%;"></div>
-                                    <div class="am-video-meta"><div style="height: 14px; background: rgba(255,255,255,0.1); border-radius: 4px; width: 35%;"></div></div>
-                                </div>
-                            </div>
-                            @endforelse
+
+                @if($videos->count() > 0)
+                {{-- ── Featured Hero Card (First Video) ── --}}
+                @php $featuredVideo = $videos->first(); @endphp
+                <a href="{{ $featuredVideo->video_url }}" onclick="openVideoModal('{{ $featuredVideo->video_url }}', '{{ addslashes($featuredVideo->title) }}', event)" class="tv-featured-card">
+                    <div class="tv-featured-thumb" style="background-image: url('{{ $featuredVideo->thumbnail_url }}');"></div>
+                    <div class="tv-featured-gradient"></div>
+                    <div class="tv-featured-play-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3L19 12L5 21V3Z" fill="currentColor"></path></svg>
+                    </div>
+                    <div class="tv-featured-body">
+                        <div class="tv-featured-badge">🔥 Featured</div>
+                        <h2 class="tv-featured-title">{{ $featuredVideo->title }}</h2>
+                        @if($featuredVideo->description)
+                        <p class="tv-featured-desc">{{ Str::limit($featuredVideo->description, 120) }}</p>
+                        @endif
+                        <div class="tv-featured-meta">
+                            <span class="tv-featured-time">{{ $featuredVideo->created_at->diffForHumans() }}</span>
+                            <span class="tv-featured-watch-btn">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3L19 12L5 21V3Z"/></svg>
+                                Watch Now
+                            </span>
                         </div>
                     </div>
+                </a>
+
+                {{-- ── Section label ── --}}
+                <div class="tv-section-label">
+                    <div class="tv-section-label-accent"></div>
+                    <span class="tv-section-label-text">All Videos</span>
+                    <div class="tv-section-label-line"></div>
+                    <span style="font-family:'Inter',sans-serif; font-size:11px; font-weight:600; color:#bbb;">{{ $videos->count() }} Videos</span>
                 </div>
+                @endif
+
+                {{-- ── Video Grid ── --}}
+                <div class="am-video-grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
+                    @forelse($videos->skip(1) as $video)
+                    <div class="am-video-card" style="min-height: 300px;">
+                        <a href="{{ $video->video_url }}" onclick="openVideoModal('{{ $video->video_url }}', '{{ addslashes($video->title) }}', event)" class="am-video-link">
+                            <div class="am-video-thumb-wrap" style="background-image: url('{{ $video->thumbnail_url }}');">
+                                <div class="am-video-overlay"></div>
+                            </div>
+                            <div class="am-video-play-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 3L19 12L5 21V3Z" fill="currentColor"></path></svg>
+                            </div>
+                            <div class="am-video-duration">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 9.2L21 6V18L17 14.8V19C17 19.5523 16.5523 20 16 20H4C3.44772 20 3 19.5523 3 19V5C3 4.44772 3.44772 4 4 4H16C16.5523 4 17 4.44772 17 5V9.2ZM15 10.3243V6H5V18H15V13.6757L19 16.5514V7.44855L15 10.3243Z"></path></svg>
+                                Watch Now
+                            </div>
+                            <div class="am-video-content">
+                                <h3 class="am-video-title" style="font-size:16px;">{{ $video->title }}</h3>
+                                @if($video->description)
+                                <p class="am-video-desc" style="font-size:12px;">{{ Str::limit($video->description, 60) }}</p>
+                                @endif
+                                <div class="am-video-meta">
+                                    <span class="am-video-time">{{ $video->created_at->diffForHumans() }}</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @empty
+                    @for ($s = 0; $s < 6; $s++)
+                    <div class="am-video-card" style="min-height:300px;">
+                        <div class="am-video-thumb-wrap" style="background:#2d3748;"></div>
+                        <div class="am-video-content">
+                            <div style="height:16px;background:rgba(255,255,255,0.2);border-radius:4px;margin-bottom:10px;width:80%"></div>
+                            <div style="height:12px;background:rgba(255,255,255,0.1);border-radius:4px;width:55%"></div>
+                        </div>
+                    </div>
+                    @endfor
+                    @endforelse
+                </div>
+
             </div>
 
             <aside class="am-sidebar">
