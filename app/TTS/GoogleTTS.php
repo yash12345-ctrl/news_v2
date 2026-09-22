@@ -55,6 +55,9 @@ class GoogleTTS implements TTSGeneratorInterface
         // string reallocation that .= causes on every iteration).
         $parts = [];
         foreach ($responses as $index => $response) {
+            if ($response instanceof \Throwable) {
+                throw new \Exception("Google TTS chunk {$index} failed with exception: " . $response->getMessage());
+            }
             if ($response->failed()) {
                 throw new \Exception("Google TTS chunk {$index} failed: {$response->status()} - {$response->body()}");
             }
