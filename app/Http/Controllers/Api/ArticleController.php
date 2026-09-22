@@ -560,15 +560,20 @@ class ArticleController extends Controller
             $tts = new TTS($googleTTS);
             
             $voiceId = ($lang == Article::URDU) ? 'ur-IN-Standard-A' : 'en-US-Standard-A';
-            $speech = $tts->remember($id)->textToSpeech($text, $voiceId);
-
-            $filename = "tts/" . $article->slug . "_" . $langSuffix . "_" . time() . ".mp3";
-            $speech->saveFile($filename);
-
-            $url = asset('storage/' . $filename);
             
-            $article->$audioUrlField = $url;
-            $article->save();
+            $url = retry(3, function () use ($tts, $id, $text, $voiceId, $article, $langSuffix, $audioUrlField) {
+                $speech = $tts->remember($id)->textToSpeech($text, $voiceId);
+
+                $filename = "tts/" . $article->slug . "_" . $langSuffix . "_" . time() . ".mp3";
+                $speech->saveFile($filename);
+
+                $generatedUrl = asset('storage/' . $filename);
+                
+                $article->$audioUrlField = $generatedUrl;
+                $article->save();
+                
+                return $generatedUrl;
+            }, 1000);
 
             return response()->json([
                 "url" => $url
