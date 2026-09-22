@@ -4,7 +4,6 @@ namespace App\Support;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\DigitalAd;
-use App\Models\Guldastah;
 use App\Models\ENewsPaper;
 use Illuminate\Http\Request;
 
@@ -32,7 +31,7 @@ class HomePageArticle {
         $popular_articles = [];
         $last_article = null;
         $enews_paper = null;
-        $guldastah_pages = null;
+
         $random_ad = null;
         $items = 5;
 
@@ -63,7 +62,6 @@ class HomePageArticle {
         $enews                      = ENewsPaper::lastEnews();
         $enews_paper_page           = $enews ? $enews->enewsPaperPage()->get() : collect();
         $first                      = $enews_paper_page->shift();
-        $guldastah                  = Guldastah::lastGuldastah()->first();
         $digital_ads                = DigitalAd::latestAds(10)->get();
 
         $random_ad                  = null;
@@ -75,9 +73,6 @@ class HomePageArticle {
             }
         }
         
-        if (!is_null($guldastah)) {
-            $guldastah_pages = $guldastah->guldastahPage()->get();
-        }
 
         $result = [
             "top_categories_articles"   => $top_categories_articles,
@@ -89,8 +84,6 @@ class HomePageArticle {
             "enews"                     => $enews,
             "enews_paper_page"          => $enews_paper_page,
             "category_map"              => $category_map,
-            "guldastah"                 => $guldastah,
-            "guldastah_pages"           => $guldastah_pages,
             "digital_ads"               => $digital_ads,
             "random_ad"                 => $random_ad,
         ];
