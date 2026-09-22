@@ -70,31 +70,33 @@ class GoogleTTS implements TTSGeneratorInterface
 		return implode('', $parts);
 	}
 
-    private function chunkText(string $text, int $maxLength): array
+    private function chunkText(string $text, int $maxBytes): array
     {
-        if (mb_strlen($text) <= $maxLength) {
+        if (strlen($text) <= $maxBytes) {
             return [$text];
         }
 
         $chunks = [];
-        while (mb_strlen($text) > 0) {
-            if (mb_strlen($text) <= $maxLength) {
+        while (strlen($text) > 0) {
+            if (strlen($text) <= $maxBytes) {
                 $chunks[] = $text;
                 break;
             }
 
-            // Find the last space within the max length to avoid splitting words
-            $chunk = mb_substr($text, 0, $maxLength);
-            $lastSpace = mb_strrpos($chunk, ' ');
+            // Cut safely by bytes up to maxBytes without splitting characters
+            $chunk = mb_strcut($text, 0, $maxBytes, 'UTF-8');
+            
+            // Try to find the last space to avoid breaking words
+            $lastSpace = mb_strrpos($chunk, ' ', 0, 'UTF-8');
 
-            if ($lastSpace !== false) {
-                $chunk = mb_substr($text, 0, $lastSpace);
-                $text = trim(mb_substr($text, $lastSpace));
-            } else {
-                $chunk = mb_substr($text, 0, $maxLength);
-                $text = mb_substr($text, $maxLength);
+            if ($lastSpace !== false && $lastSpace > 0) {
+                // If we found a space, cut there using character position
+                $chunk = mb_substr($chunk, 0, $lastSpace, 'UTF-8');
             }
+            
             $chunks[] = $chunk;
+            // Advance the text by the exact byte length of the finalized chunk
+            $text = trim(substr($text, strlen($chunk)));
         }
 
         return $chunks;
