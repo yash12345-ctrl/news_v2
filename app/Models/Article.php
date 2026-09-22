@@ -54,7 +54,9 @@ class Article extends Model
         'status',
         'visible_in',
         'published_at',
-        'flag'
+        'flag',
+        'audio_ur_url',
+        'audio_en_url'
     ];
 
     public function articleVotes(): HasMany

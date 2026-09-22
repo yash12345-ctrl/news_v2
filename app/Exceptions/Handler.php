@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Throwable;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class Handler extends ExceptionHandler
@@ -54,6 +55,16 @@ class Handler extends ExceptionHandler
                     'errors'  => null,
                     'message' => $e->getMessage(),
                 ], 404);
+            }
+        });
+
+        $this->renderable(function (ThrottleRequestsException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status'  => 'error',
+                    'errors'  => null,
+                    'message' => 'Too many requests. Please wait ' . $e->getHeaders()['Retry-After'] . ' seconds before trying again.',
+                ], 429)->withHeaders($e->getHeaders());
             }
         });
     }

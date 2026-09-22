@@ -3,11 +3,12 @@
 namespace App\TTS;
 
 use Illuminate\Support\Facades\Storage;
+use App\TTS\Interfaces\TTSResponseInterface;
 
 /**
  * TTSSpeech - Text To Speech
  */
-class TTSSpeech
+class TTSSpeech implements TTSResponseInterface
 {
 	protected $audio_bytes;
 
@@ -23,7 +24,12 @@ class TTSSpeech
 
 	public function saveFile(string $filename): bool
 	{
-		Storage::disk('public')->put($filename, $this->audio_bytes);
+		$path = public_path('storage/' . $filename);
+		$dir  = dirname($path);
+		if (!is_dir($dir)) {
+			mkdir($dir, 0755, true);
+		}
+		file_put_contents($path, $this->audio_bytes);
 		return true;
 	}
 }

@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google_tts' => [
+        'key' => env('GOOGLE_TTS_API_KEY'),
+    ],
+
+    'openai_tts' => [
+        'key'   => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_TTS_MODEL', 'gpt-4o-mini-tts'),
+    ],
+
 ];

@@ -7,7 +7,7 @@ use App\TTS\OpenAI;
 use App\Models\Admin;
 use App\Models\Article;
 use App\Models\Category;
-use App\TTS\ElevenlabsTTS;
+use App\TTS\GoogleTTS;
 use App\Models\ArticleVote;
 use App\Models\ArticleInteraction;
 use Illuminate\Support\Str;
@@ -235,6 +235,11 @@ class ArticleController extends Controller
         
         $old_status = $article->status;
 
+        if (isset($validated['status']) && $validated['status'] != Article::PUBLISHED) {
+            $article->audio_ur_url = null;
+            $article->audio_en_url = null;
+        }
+
         $article->update($validated);
         
         if (isset($validated['status']) && $validated['status'] == Article::PUBLISHED && $old_status != Article::PUBLISHED) {
@@ -270,6 +275,9 @@ class ArticleController extends Controller
 
         if ($validated['status'] == Article::PUBLISHED) {
             $validated['published_at'] = date('Y-m-d H:i:s');
+        } else {
+            $article->audio_ur_url = null;
+            $article->audio_en_url = null;
         }
 
         $article->update($validated);
@@ -505,43 +513,71 @@ class ArticleController extends Controller
             'ip'         => request()->ip(),
         ]);
 
-        if (lang_urdu()) {
-            $text = $article->content_short_ur;
-            if ($device == 'web') {
-                $text = $article->content_ur;
-            }
-            $lang = Article::URDU;
-        }
+        $audioUrlField = '';
+        $langSuffix = '';
 
-        if (lang_english()) {
-            $text = $article->content_short_en;
-            if ($device == 'web') {
-                $text = $article->content_en;
-            }
+        if (lang_urdu()) {
+            $text = $article->content_ur;
+            $lang = Article::URDU;
+            $audioUrlField = 'audio_ur_url';
+            $langSuffix = 'ur';
+        } elseif (lang_english()) {
+            $text = $article->content_en;
             $lang = Article::HINDUSTANI;
+            $audioUrlField = 'audio_en_url';
+            $langSuffix = 'en';
+        } else {
+            return response()->json(['error' => 'Unsupported language'], 422);
         }
 
         if (Article::BOTH != $article->visible_in && $article->visible_in != $lang) {
             return null;
         }
 
-        $elevenlabs = new ElevenlabsTTS(api_key: env("ELEVENLABS_APIKEY"));
-        $tts = new TTS($elevenlabs);
-        $speech = $tts->remember($id)->textToSpeech($text);
+        if (!empty($article->$audioUrlField)) {
+            return response()->json([
+                "url" => $article->$audioUrlField
+            ]);
+        }
 
+        $text = trim(strip_tags(html_entity_decode($text ?? '')));
+        if (empty($text)) {
+            return response()->json(['error' => 'Article content is empty'], 400);
+        }
 
+        $lockKey = "tts_generate_{$id}_{$langSuffix}";
+        $lock = \Illuminate\Support\Facades\Cache::lock($lockKey, 60);
 
-        // @NOTE Best would be to use article slug for file name.
-        // Saves the file in storage/app/
-        $filename = $article->slug . ".mp3";
-        $speech->saveFile($filename);
+        try {
+            $lock->block(15);
 
-        // http://localhost:8000/storage/test2.mp3
-        $url = asset('storage/' . $filename);
+            $article->refresh();
+            if (!empty($article->$audioUrlField)) {
+                return response()->json(["url" => $article->$audioUrlField]);
+            }
 
-        return response()->json([
-            "url" => $url
-        ]);
+            $googleTTS = new GoogleTTS(config('services.google_tts.key'));
+            $tts = new TTS($googleTTS);
+            
+            $voiceId = ($lang == Article::URDU) ? 'ur-IN-Standard-A' : 'en-US-Standard-A';
+            $speech = $tts->remember($id)->textToSpeech($text, $voiceId);
+
+            $filename = "tts/" . $article->slug . "_" . $langSuffix . "_" . time() . ".mp3";
+            $speech->saveFile($filename);
+
+            $url = asset('storage/' . $filename);
+            
+            $article->$audioUrlField = $url;
+            $article->save();
+
+            return response()->json([
+                "url" => $url
+            ]);
+        } catch (\Illuminate\Contracts\Cache\LockTimeoutException $e) {
+            return response()->json(['error' => 'Server busy generating audio. Please try again.'], 429);
+        } finally {
+            optional($lock)->release();
+        }
     }
     
     public function translateText(Request $request)

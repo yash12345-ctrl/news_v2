@@ -2,6 +2,7 @@
 
 namespace App\TTS;
 
+use Illuminate\Support\Facades\Cache;
 use App\TTS\Interfaces\TTSGeneratorInterface;
 
 /**
@@ -17,6 +18,10 @@ class TTS
 		$this->tts_service = $tts_service;
 	}
 
+	/**
+	 * Set a cache key identifier (e.g., article ID + voice) so that repeated
+	 * calls for the same content skip the external API entirely.
+	 */
 	public function remember(string|int $id): self
 	{
 		$this->remember_value = $id;
@@ -26,7 +31,18 @@ class TTS
 
 	public function textToSpeech(string $text, ?string $voice_id = null): TTSSpeech
 	{
-		// It may throw exeception.
+		if ($this->remember_value !== null) {
+			$cacheKey = 'tts_audio_' . $this->remember_value . '_' . ($voice_id ?? 'default');
+
+			$audioBytes = Cache::remember($cacheKey, now()->addDays(7), function () use ($text, $voice_id) {
+				// Caller needs to handle this exception.
+				return $this->tts_service->textToSpeech($text, $voice_id);
+			});
+
+			return new TTSSpeech($audioBytes);
+		}
+
+		// No caching — call API directly.
 		// Caller needs to handle this exception.
 		$response = $this->tts_service->textToSpeech($text, $voice_id);
 

@@ -14,7 +14,6 @@ use App\Http\Controllers\Api\HomePageController;
 use App\Http\Controllers\Api\PollVoteController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DigitalAdController;
-use App\Http\Controllers\Api\GuldastahController;
 use App\Http\Controllers\Api\MyProfileController;
 use App\Http\Controllers\Api\AdvertiserController;
 use App\Http\Controllers\Api\ENewsPaperController;
@@ -23,7 +22,6 @@ use App\Http\Controllers\Api\TranslationController;
 use App\Http\Controllers\VisitorAnalyticController;
 use App\Http\Controllers\Api\VisitorStatsController;
 use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\GuldastahPageController;
 use App\Http\Controllers\Api\MediaResourceController;
 use App\Http\Controllers\Api\ArticleCommentController;
 use App\Http\Controllers\Api\ENewsPaperPageController;
@@ -120,11 +118,6 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/polls/{id}/votes', [PollVoteController::class, 'store']);
     Route::post('/digital-ads', [DigitalAdsAnalyticController::class, 'store']);
 
-    Route::post('/guldastahs', [GuldastahController::class, 'store']);
-    Route::post('/guldastahs/{id}', [GuldastahController::class, 'update']);
-    Route::post('/guldastah-paper/{id}/uploads', [GuldastahPageController::class, 'upload']);
-    Route::post('/guldastahs/{id}/status', [GuldastahController::class, 'statusUpdate']);
-
     Route::post('/trending-videos', [\App\Http\Controllers\Api\TrendingVideoController::class, 'store']);
     Route::post('/trending-videos/upload', [\App\Http\Controllers\Api\TrendingVideoController::class, 'upload']);
     Route::post('/trending-videos/{id}', [\App\Http\Controllers\Api\TrendingVideoController::class, 'update']);
@@ -161,8 +154,6 @@ require __DIR__ . '/quiz.php';
 Route::get('/enews', [ENewsPaperController::class, 'index']);
 Route::get('/enews/{id}', [ENewsPaperController::class, 'show']);
 Route::get('/enews/search', [ENewsPaperController::class, 'search']);
-Route::get('/guldastahs', [GuldastahController::class, 'index']);
-Route::get('/guldastahs/{id}', [GuldastahController::class, 'show']);
 
 
 Route::get('/categories', [CategoryController::class, 'index']);
@@ -176,7 +167,9 @@ Route::post('/articles/{id}/track-view', [ArticleController::class, 'trackIntera
 Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/articles/{id}/comments', [ArticleController::class, 'getCommentByArticleId']);
 Route::get('/articles/{id}/related', [ArticleController::class, 'relatedArticles']);
-Route::get('/articles/{id}/text-to-speech', [ArticleController::class, 'textToSpeech']);
+Route::middleware(['throttle:10,1'])->group(function () {
+    Route::get('/articles/{id}/text-to-speech', [ArticleController::class, 'textToSpeech']);
+});
 
 Route::get('/comments', [ArticleCommentController::class, 'index']);
 Route::post('/comments', [ArticleCommentController::class, 'store']);

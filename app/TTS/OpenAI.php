@@ -2,7 +2,7 @@
 
 namespace App\TTS;
 
-use App\TTS\TTSSpeech;
+
 use Illuminate\Support\Facades\Http;
 use App\TTS\Interfaces\TTSGeneratorInterface;
 
@@ -33,8 +33,8 @@ class OpenAI implements TTSGeneratorInterface
 			])->post($api_url, [
 				'model' 		=> $this->model,
 				'input' 		=> $text,
-				'voice' 		=> $this->voice,
-				'instruction' 	=> "Speek in urdu accent carefully espcially speeking urdu words that match english word.",
+				'voice' 		=> $voice,
+				'instruction' 	=> "Speak in Urdu accent carefully, especially speaking Urdu words that match English words.",
 			]);
 
 		if ($response->failed()) {

@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('guldastah_pages', function (Blueprint $table) {
-            $table->string('page_sm_url', 256)->after('page_url')->nullable();
+        Schema::table('articles', function (Blueprint $table) {
+            $table->string('audio_ur_url', 256)->nullable();
+            $table->string('audio_en_url', 256)->nullable();
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('guldastah_pages', function (Blueprint $table) {
-            $table->dropColumn('page_sm_url');
+        Schema::table('articles', function (Blueprint $table) {
+            $table->dropColumn('audio_ur_url');
+            $table->dropColumn('audio_en_url');
         });
     }
 };

@@ -25,3 +25,4 @@ keys/
 !.gitignore
 /admin-frontend/
 *.zip
+/storage/framework/cache/

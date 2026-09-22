@@ -1137,15 +1137,15 @@ const app = new Vue({
                 
                 if(titleEl && this.originalTitle) {
                     titleEl.innerText = this.originalTitle;
-                    titleEl.style.direction = '';
-                    titleEl.style.textAlign = '';
-                    titleEl.style.fontFamily = '';
+                    titleEl.style.removeProperty('direction');
+                    titleEl.style.removeProperty('text-align');
+                    titleEl.style.removeProperty('font-family');
                 }
                 if(descEl && this.originalContent) {
                     descEl.innerHTML = this.originalContent;
-                    descEl.style.direction = '';
-                    descEl.style.textAlign = '';
-                    descEl.style.fontFamily = '';
+                    descEl.style.removeProperty('direction');
+                    descEl.style.removeProperty('text-align');
+                    descEl.style.removeProperty('font-family');
                 }
                 this.isEnglish = false;
                 return;
@@ -1164,15 +1164,15 @@ const app = new Vue({
 
                         if(titleEl) {
                             titleEl.innerText = data.title;
-                            titleEl.style.direction = 'ltr';
-                            titleEl.style.textAlign = 'left';
-                            titleEl.style.fontFamily = '"Inter", sans-serif';
+                            titleEl.style.setProperty('direction', 'ltr', 'important');
+                            titleEl.style.setProperty('text-align', 'left', 'important');
+                            titleEl.style.setProperty('font-family', '"Inter", sans-serif', 'important');
                         }
                         if(descEl) {
                             descEl.innerHTML = data.content.replace(/\n/g, '<br>');
-                            descEl.style.direction = 'ltr';
-                            descEl.style.textAlign = 'left';
-                            descEl.style.fontFamily = '"Inter", sans-serif';
+                            descEl.style.setProperty('direction', 'ltr', 'important');
+                            descEl.style.setProperty('text-align', 'left', 'important');
+                            descEl.style.setProperty('font-family', '"Inter", sans-serif', 'important');
                         }
                         this.isEnglish = true;
                     } else {
